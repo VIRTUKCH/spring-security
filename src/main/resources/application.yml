@@ -12,9 +12,9 @@ spring:
         format_sql: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ohgiraffers
-    username: ohgiraffers
-    password: ohgiraffers
+    url: jdbc:mysql://localhost:3306/spring_security_db
+    username: VIRTUKCH
+    password: VIRTUKCH
 jwt:
   key: sdfadsfsdfadsfasdfasdfasdfsdfnw4tn23n4on1k5n1k2n14369hn
   time: 86400000
