@@ -12,29 +12,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 
+/**
+ * 사용자 관련 요청을 처리하는 컨트롤러 클래스입니다. 이 클래스는 사용자 회원가입 기능을 제공합니다.
+ *
+ * @author Virtus_Chae
+ */
 @Controller
 @RestController
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepository; // 사용자 정보를 처리하는 레포지토리
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder; // 비밀번호 암호화를 위한 인코더
 
-
+    /**
+     * 사용자 회원가입을 처리하는 메서드입니다.
+     *
+     * @param user 회원가입할 사용자 정보
+     * @return ResponseEntity 회원가입 결과에 대한 응답
+     */
     @PostMapping("/signup")
-    public ResponseEntity singup(@RequestBody User user){
-
+    public ResponseEntity signup(@RequestBody User user) {
+        // 비밀번호를 암호화하고 상태를 설정
         user.setUserPass(passwordEncoder.encode(user.getUserPass()));
         user.setState("Y");
-        User value  = userRepository.save(user);
+        userRepository.save(user); // 사용자 정보를 저장
 
-        if(Objects.isNull(value)){
-            return ResponseEntity.status(500).body("회원가입 실패");
-        }else{
-            return ResponseEntity.ok("회원가입 실패");
-        }
-
+        return ResponseEntity.ok("회원가입 성공"); // 성공 시 메시지 반환
     }
 }
