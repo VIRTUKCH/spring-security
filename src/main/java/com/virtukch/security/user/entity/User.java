@@ -1,6 +1,6 @@
 package com.virtukch.security.user.entity;
 
-import com.virtukch.security.common.OhgiraffersRole;
+import com.virtukch.security.common.VirtusRole;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class User {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "USER_ROLE")
-    private OhgiraffersRole role;
+    private VirtusRole role;
 
     @Column(name = "USER_STATE")
     private String state;
@@ -85,11 +85,11 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public OhgiraffersRole getRole() {
+    public VirtusRole getRole() {
         return role;
     }
 
-    public void setRole(OhgiraffersRole role) {
+    public void setRole(VirtusRole role) {
         this.role = role;
     }
 

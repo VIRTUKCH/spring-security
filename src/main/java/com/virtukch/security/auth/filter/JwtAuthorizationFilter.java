@@ -2,7 +2,7 @@ package com.virtukch.security.auth.filter;
 
 import com.virtukch.security.auth.model.DetailsUser;
 import com.virtukch.security.common.AuthConstants;
-import com.virtukch.security.common.OhgiraffersRole;
+import com.virtukch.security.common.VirtusRole;
 import com.virtukch.security.common.utils.TokenUtils;
 import com.virtukch.security.user.entity.User;
 import io.jsonwebtoken.Claims;
@@ -82,7 +82,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     User user = new User();
                     user.setUserName(claims.get("userName").toString());
 //                    user.setUserEmail(claims.get("userEmail").toString());
-                    user.setRole(OhgiraffersRole.valueOf(claims.get("Role").toString()));
+                    user.setRole(VirtusRole.valueOf(claims.get("Role").toString()));
                     authentication.setUser(user);
 
                     AbstractAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.authenticated(
