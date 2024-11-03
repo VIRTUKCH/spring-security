@@ -28,22 +28,38 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * JWT (Json Web Token) 기반 인증을 처리하는 필터 클래스.
+ * JWT (Json Web Token) 기반 인증을 처리하는 필터 클래스입니다.
+ * 이 필터는 HTTP 요청에서 JWT 를 검증하고, 유효한 경우 인증 정보를 설정합니다.
  *
  * @author Virtus_Chae
  */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
+    /**
+     * 생성자: JwtAuthorizationFilter 의 인스턴스를 생성합니다.
+     *
+     * @param authenticationManager 인증 매니저
+     */
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
 
+    /**
+     * 필터링 로직을 수행하는 메서드입니다.
+     * HTTP 요청에서 JWT 를 검증하고, 인증 정보를 설정합니다.
+     *
+     * @param request  HTTP 요청 객체
+     * @param response HTTP 응답 객체
+     * @param chain    필터 체인
+     * @throws IOException I/O 예외
+     * @throws ServletException 서블릿 예외
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain chain) throws IOException, ServletException {
         /*
-         * 권한이 필요없는 리소스
-         * */
+         * 권한이 필요 없는 리소스
+         */
         List<String> roleLeessList = Arrays.asList(
             "/signup"
         );
@@ -65,7 +81,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     DetailsUser authentication = new DetailsUser();
                     User user = new User();
                     user.setUserName(claims.get("userName").toString());
-
 //                    user.setUserEmail(claims.get("userEmail").toString());
                     user.setRole(OhgiraffersRole.valueOf(claims.get("Role").toString()));
                     authentication.setUser(user);
@@ -94,7 +109,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     /**
-     * 토큰 관련된 Exception 발생 시 예외 응답
+     * JWT 관련 예외 발생 시 JSON 형식으로 응답하는 메서드입니다.
+     *
+     * @param e 발생한 예외
+     * @return 예외에 대한 정보를 포함하는 JSON 객체
      */
     private JSONObject jsonresponseWrapper(Exception e) {
         String resultMsg = "";
@@ -102,13 +120,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             resultMsg = "Token Expired";
         } else if (e instanceof SignatureException) {
             resultMsg = "TOKEN SignatureException Login";
-        }
-        // JWT 토큰내에서 오류 발생 시
-        else if (e instanceof JwtException) {
+        } else if (e instanceof JwtException) {
             resultMsg = "TOKEN Parsing JwtException";
-        }
-        // 이외 JTW 토큰내에서 오류 발생
-        else {
+        } else {
             resultMsg = "OTHER TOKEN ERROR";
         }
 
@@ -116,7 +130,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         jsonMap.put("status", 401);
         jsonMap.put("message", resultMsg);
         jsonMap.put("reason", e.getMessage());
-        JSONObject jsonObject = new JSONObject(jsonMap);
-        return jsonObject;
+        return new JSONObject(jsonMap);
     }
 }

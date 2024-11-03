@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * 웹 관련 설정을 위한 구성 클래스입니다. 정적 자원 처리 및 보안 필터 등록을 포함합니다.
  * 커스텀 필터를 설정하고, 그에 맞는 경로를 설정합니다.
+ *
  * @author Virtus_Chae
  */
 @Configuration
