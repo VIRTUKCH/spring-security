@@ -12,6 +12,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 사용자 인증을 처리하기 위한 커스텀 필터입니다.
+ *
+ * @author Virtus_Chae
+ */
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -38,7 +43,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
      *
      * @param request - httpServletRequest
      * @return UserPasswordAuthenticationToken
-     * @throw Excpetion e
      * */
     private UsernamePasswordAuthenticationToken getAuthRequest(HttpServletRequest request) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();

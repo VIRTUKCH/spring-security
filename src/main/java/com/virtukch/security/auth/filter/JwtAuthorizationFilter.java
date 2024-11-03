@@ -27,6 +27,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * JWT (Json Web Token) 기반 인증을 처리하는 필터 클래스.
+ *
+ * @author Virtus_Chae
+ */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
@@ -34,26 +39,27 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        FilterChain chain) throws IOException, ServletException {
         /*
-        * 권한이 필요없는 리소스
-        * */
+         * 권한이 필요없는 리소스
+         * */
         List<String> roleLeessList = Arrays.asList(
-                "/signup"
+            "/signup"
         );
 
-        if(roleLeessList.contains(request.getRequestURI())){
-            chain.doFilter(request,response);
+        if (roleLeessList.contains(request.getRequestURI())) {
+            chain.doFilter(request, response);
             return;
         }
 
         String header = request.getHeader(AuthConstants.AUTH_HEADER);
 
         try {
-            if(header != null && !header.equalsIgnoreCase("")){
+            if (header != null && !header.equalsIgnoreCase("")) {
                 String token = TokenUtils.splitHeader(header);
 
-                if(TokenUtils.isValidToken(token)){
+                if (TokenUtils.isValidToken(token)) {
                     Claims claims = TokenUtils.getClaimsFormToken(token);
 
                     DetailsUser authentication = new DetailsUser();
@@ -64,18 +70,19 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     user.setRole(OhgiraffersRole.valueOf(claims.get("Role").toString()));
                     authentication.setUser(user);
 
-                    AbstractAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.authenticated(authentication, token, authentication.getAuthorities());
+                    AbstractAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.authenticated(
+                        authentication, token, authentication.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    chain.doFilter(request,response);
-                }else{
+                    chain.doFilter(request, response);
+                } else {
                     throw new RuntimeException("토큰이 유효하지 않습니다.");
                 }
-            }else{
+            } else {
                 throw new RuntimeException("토큰이 존재하지 않습니다.");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             PrintWriter printWriter = response.getWriter();
@@ -88,7 +95,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     /**
      * 토큰 관련된 Exception 발생 시 예외 응답
-     * */
+     */
     private JSONObject jsonresponseWrapper(Exception e) {
         String resultMsg = "";
         if (e instanceof ExpiredJwtException) {
